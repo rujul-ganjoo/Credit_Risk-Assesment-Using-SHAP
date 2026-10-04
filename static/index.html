@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loan Risk Assessor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="bg"><span class="orb o1"></span><span class="orb o2"></span><span class="orb o3"></span></div>
+
+<main class="wrap">
+  <header class="top">
+    <h1>Loan risk assessor</h1>
+    <p>Enter an application and get a calibrated default probability from an ensemble of five XGBoost models.</p>
+  </header>
+
+  <div class="layout">
+    <form id="form" class="panel" novalidate>
+      <fieldset>
+        <legend>Applicant</legend>
+        <div class="grid">
+          <label>Age
+            <input type="number" name="person_age" min="18" max="100" value="30" required>
+          </label>
+          <label>Annual income
+            <input type="number" name="person_income" min="1" step="any" value="60000" required>
+          </label>
+          <label>Home ownership
+            <select name="person_home_ownership">
+              <option>RENT</option><option>OWN</option><option>MORTGAGE</option><option>OTHER</option>
+            </select>
+          </label>
+          <label>Employment length (years)
+            <input type="number" name="person_emp_length" min="0" step="any" value="4" required>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Loan</legend>
+        <div class="grid">
+          <label>Purpose
+            <select name="loan_intent">
+              <option value="PERSONAL">Personal</option>
+              <option value="EDUCATION">Education</option>
+              <option value="MEDICAL">Medical</option>
+              <option value="VENTURE">Venture</option>
+              <option value="HOMEIMPROVEMENT">Home improvement</option>
+              <option value="DEBTCONSOLIDATION">Debt consolidation</option>
+            </select>
+          </label>
+          <label>Grade
+            <select name="loan_grade">
+              <option>A</option><option>B</option><option selected>C</option><option>D</option><option>E</option><option>F</option><option>G</option>
+            </select>
+          </label>
+          <label>Loan amount
+            <input type="number" name="loan_amnt" min="1" step="any" value="10000" required>
+          </label>
+          <label>Interest rate (%)
+            <input type="number" name="loan_int_rate" min="0" step="any" value="11.5" required>
+          </label>
+          <label class="full">Loan as share of income
+            <div class="auto"><input type="number" name="loan_percent_income" step="any" readonly><em id="pctLabel"></em></div>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Credit history</legend>
+        <div class="grid">
+          <div class="field">
+            <span>Previous default on file</span>
+            <div class="seg" role="radiogroup">
+              <input type="radio" id="dN" name="cb_person_default_on_file" value="N" checked><label for="dN">No</label>
+              <input type="radio" id="dY" name="cb_person_default_on_file" value="Y"><label for="dY">Yes</label>
+              <i class="thumb"></i>
+            </div>
+          </div>
+          <label>Credit history (years)
+            <input type="number" name="cb_person_cred_hist_length" min="0" value="5" required>
+          </label>
+        </div>
+      </fieldset>
+
+      <button type="submit" id="go"><span class="btn-text">Assess risk</span><span class="spin"></span></button>
+      <p id="error" class="error" role="alert"></p>
+    </form>
+
+    <aside class="panel result" id="result" data-state="idle">
+      <div class="gauge">
+        <svg viewBox="0 0 200 118" aria-hidden="true">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1">
+              <stop offset="0" stop-color="var(--low)"/><stop offset=".55" stop-color="var(--mid)"/><stop offset="1" stop-color="var(--high)"/>
+            </linearGradient>
+          </defs>
+          <path class="track" d="M 20 100 A 80 80 0 0 1 180 100"/>
+          <path class="fill" id="arc" d="M 20 100 A 80 80 0 0 1 180 100"/>
+          <line id="thr" class="thr" x1="0" y1="0" x2="0" y2="0"/>
+        </svg>
+        <div class="readout">
+          <div class="num"><span id="pct">--</span><small>%</small></div>
+          <div class="cap">chance of default</div>
+        </div>
+      </div>
+      <div class="badge" id="badge">Awaiting application</div>
+      <p class="note" id="note">Fill in the form and select Assess risk. The tick on the dial marks the approval cutoff.</p>
+      <dl class="meta">
+        <div><dt>Cutoff</dt><dd id="thrVal">--</dd></div>
+        <div><dt>Models averaged</dt><dd>5</dd></div>
+      </dl>
+    </aside>
+  </div>
+</main>
+<script src="/script.js"></script>
+</body>
+</html>
