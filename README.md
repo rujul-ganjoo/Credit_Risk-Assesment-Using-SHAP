@@ -447,6 +447,13 @@ Credit risk predictions should not be used as the sole basis for real-world lend
 
 ---
 
+## 🚀 Live Demo
+
+The deployed Credit Risk Assessment application is available here:
+
+**[Credit Risk Assessment — Live Demo](https://credit-risk-assesment-using-shap-rzkh.onrender.com/)**
+
+You can use the live application to submit a loan application and receive a predicted credit-risk classification along with the estimated default probability.
 # 👨‍💻 Author
 
 **Rujul Ganjoo**
